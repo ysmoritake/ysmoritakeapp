@@ -1,1 +1,0 @@
-$(document).ready(function(){$("a").each(function(){var n=this;n.origin!==location.origin&&$(n).attr("target","_blank")})});
