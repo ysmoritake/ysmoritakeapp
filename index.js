@@ -32,13 +32,15 @@ function doRequest(request, response) {
     var url_parts = url.parse(request.url);
 
     if (routes[url_parts.pathname] == null) {
-        console.log("NOT FOUND PAGE": "+request.url"; response.writeHead(200, {
+        console.log("NOT FOUND PAGE:" + request.url); response.writeHead(200, {
             'Content-Type': 'text/html'
-        }); request.url + "</h1></body></html>");
+        });
+        response.end("<html><body><h1>NOT FOUNDE PAGE" + 
+        request.url + "</h1></body></html>");
         return;
     }
-    var content = ejs.render(
-        routes[url_parts.pathname].title, content: ejs.render(routes[url_parts.pathname].content, {
+    var content = ejs.render(template,{
+        title:routes[url_parts.pathname].title, content:ejs.render(routes[url_parts.pathname].content, {
             mesage: routes[url_parts.pathname].message
         })
     }
