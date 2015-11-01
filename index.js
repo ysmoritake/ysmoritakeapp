@@ -1,20 +1,52 @@
-var express = require('express');
-var app = express();
+var http = require('http');
+var fs = require('fs');
+var ejs = require('ejs');
+var url = require('url');
+var template = fs.readFileSync('./template.ejs', 'utf8');
+var content1 = fs.readFileSync('./content1.ejs', 'utf8');
+var content2 = fs.readFileSync('./content2.ejs', 'utf8');
 
-app.set('port', (process.env.PORT || 5000));
+var routes = {
+    "/": {
+        "title": "Main Page",
+        "message": "sampledesuyo",
+        "content": content1
+    },
+    "/index": {
+        "title": "Main Page",
+        "message": "korehasaple",
+        "content": content1
+    },
+    "/other": {
+        "title": "betsunopege",
+        "content": content2
+    }
+};
 
-app.use(express.static(__dirname + '/public'));
+var server = http.createServer();
+server.on('request', doRequest);
+server.Listen(1234);
+console.log('Server running!');
 
-// views is directory for all template files
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
+function doRequest(request, response) {
+    var url_parts = url.parse(request.url);
 
-app.get('/', function(request, response) {
-  response.render('pages/db');
+    if (routes[url_parts.pathname] == null) {
+        console.log("NOT FOUND PAGE": "+request.url"; response.writeHead(200, {
+            'Content-Type': 'text/html'
+        }); request.url + "</h1></body></html>");
+        return;
+    }
+    var content = ejs.render(
+        routes[url_parts.pathname].title, content: ejs.render(routes[url_parts.pathname].content, {
+            mesage: routes[url_parts.pathname].message
+        })
+    }
+);
+response.writeHead(200, {
+    'Content-Type': 'text/html'
 });
+response.write(content);
+response.end();
 
-app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
-});
-
-
+}
